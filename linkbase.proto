@@ -1,0 +1,145 @@
+package LinkBase;
+
+option java_package = "com.bradenwu.search.spider.hbase.linkbase";
+option java_outer_classname = "LinkBaseProtos";
+
+message LinkBaseAttr { 
+	optional	string	anchor = 1;
+	repeated	fixed64	contentMD5 = 2;
+	optional	int32	depth = 3;
+    //@mod etag -> etagMD5 
+	repeated	fixed64	etagMD5 = 4;
+	optional	uint32	foundTime = 5;
+	optional	string	parentPage = 6;
+
+	repeated	fixed64	innerLinksMD5 = 7;
+
+	message CrawlHistory {
+		optional	uint32	downloadTime = 1;
+		optional	sint32	httpCode = 2;
+		repeated	fixed64	contentMD5 = 3;
+		repeated	fixed64	innerLinksMD5 = 4;
+		optional	int32	contentSize = 5;
+        //@mod innerLinks -> innerLinksNum
+		optional	int32	innerLinksNum = 6;
+        //innerAnchorLength: 所有内链anchor拼起来,总长度
+		optional	int32	innerAnchorLength = 7;
+        //@mod outerLinks -> outerLinksNum
+		optional	int32	outerLinksNum = 8;	
+		optional	int32	outerAnchorLength = 9;
+        //@mod etag -> etagMD5
+		repeated	fixed64	etagMD5 = 10;
+        //@mod seflNew -> newChildLinksNumForSelf
+		optional	int32	newChildLinksNumForSelf = 11;
+        //@mod selfGood -> goodChildLinksNumForSelf
+		optional	int32	goodChildLinksNumForSelf = 12;
+        //@mod allNew -> newChildLinksNumForAll
+		optional	int32	newChildLinksNumForAll = 13;
+        //@mod allGood -> goodChildLinksNumForAll
+		optional	int32	goodChildLinksNumForAll = 14;
+	}
+	repeated	CrawlHistory	normalCrawlHis = 8;
+	repeated	CrawlHistory	otherCrawlHis = 9;
+	repeated	CrawlHistory	hubCrawlHis = 10;
+    //@mod innerLinks -> innerLinksNum
+	optional	int32	innerLinksNum = 11;
+    //mod seedLevel -> asSeedLevel (the same as json "seedLevel"), 时效性环设置的该属性,该url作为种子叶的级别
+	optional	int32	asSeedLevel = 12;
+    //@mod pagePdate -> pagePublishDate
+	optional	uint32	pagePublishDate = 13;
+    //@mod bloomLinkNum -> linksNumAfterBloomFilter
+	optional	int32	linksNumAfterBloomFilter = 14;
+    //@mod uniUrl -> normalizedUrl 归一化后的url
+	optional	string	normalizedUrl = 15;
+    //@mod filterLinkNum -> linksNumAfterLinkFilter
+	optional	int32	linksNumAfterLinkFilter = 16;
+	optional	string	durl = 17;
+    //@mod outerLinks -> outerLinksNum
+	optional	int32	outerLinksNum = 18;
+	optional	int64	browseUV = 19;
+	optional	int64	searchUV = 20;
+
+    //@mod newLink -> isNewLink
+	optional	bool	isNewLink	= 21;
+	optional	string	downloadType = 22;
+    // manualImportTag: 该链接是否是手工导入的, 由谁基于什么目的导入的
+	optional	string	manualImportTag = 23;
+    //@mod pageLang -> pageLanguage
+	optional	string	pageLanguage = 24;
+	optional	int64	parentBrowseUV = 25;
+	optional	string	pageRank = 26;
+	optional	string	parentPageRank = 27;
+    //extends: 扩展字段
+	optional	string	extends = 28;
+	optional	int32	pageSize = 29;
+	optional	string	opType = 30;
+    //outerAnchorLength 所有外链的anchor拼一起,计算总长度
+	optional	int32	outerAnchorLength = 31;
+	optional	uint32	scheduleTime = 32;
+	optional	int32	errno = 33;
+    //@mod linkBestHref -> bestInnerLinksHrefPattern  赵燕斌 从一个网页的所有内链中, 将 所有的href 进行聚类, 给出一个最好的link 片断 的 pattern 
+	optional	string	bestInnerLinksHrefPattern = 34;
+    //@mod  initParent -> initParentPage
+	optional	string	initParentPage = 35;
+	optional	string	delReason =36;
+	optional	int32	orgLinkNum = 37;
+	optional	int64  browsePV = 38;
+    // 中文深度, 如果父链为中文 则为 1;父链非中文,为-1
+	optional	int32	cnDepth = 39;
+	optional	string	parentPageType = 40;
+	optional	uint32	parentDownloadTime = 41;
+	optional	sint32	httpCode = 42;
+    //innerAnchorLength: 所有内链anchor拼起来,总长度
+	optional	int32	innerAnchorLength = 43;
+    //最近一次从抓取页面中发现的时间
+	optional	uint32	latestFoundTime = 44;
+    //@qssLinkNum -> linksNumAfterQssFilter 被qss filter 过滤后剩余的link数目
+	optional	int32	linksNumAfterQssFilter = 45;
+    //@mod unifiedLinkNum -> linksNumAfterNormalized
+	optional	int32	linksNumAfterNormalized = 46;
+	optional	uint32	downloadTime = 47;
+	optional	int32	contentSize = 48;
+	optional	int64	parentSearchUV = 49;
+	optional	uint32	delTime = 50; 
+	optional	int32	parentPageDepth = 51;
+	optional	string	pageType = 52;
+    //@mod robotsLinkNum -> linksNumAfterRobotsFilter
+	optional	int32	linksNumAfterRobotsFilter = 53;
+    //@mod int32 -> uint32 内容死链时间,为0 或无此字段 表示非内容死链, 其它值表示上次判别为内容死链的时间
+	optional	uint32	deadPageTime = 54;
+    //协议死链时间,为0 或无此字段 表示非内容死链, 其它值表示上次判别为内容死链的时间, unix time
+	optional	uint32	deadLinkTime = 55;
+	optional	int32	offlinePageType = 56;
+	optional	uint32	firstDownloadTime = 57; 
+	optional	int32	fanyeType = 58;
+    //@mod adjust -> deadLinkAdjustSchedulePriority 由郑燕琴维护,从死链中挖掘到的,用于调整调度优先级
+	optional	int32	deadLinkAdjustSchedulePriority = 59;
+	optional	string	garbageType = 60;
+    // unix time
+	optional	uint32	pageModifyDate = 61;
+    //childNum 王智广维护, 从抓取历史中 统计分析出 提取到的子链的数目
+	optional	int32	childNum=62;
+    //childNum 王智广维护, 从抓取历史中 统计分析出 提取到的比较好的子链的数目
+	optional	int32	goodChildNum=63;
+    //childNum 王智广维护, 从抓取历史中 统计分析出 提取到的比较好的子链的数目
+	optional	int32	goodParentStatNum=64;
+    //isExpired, 链接是否过期, 比如 58的过期帖子, 提示不再调度该链接
+	optional	bool	isExpired=65;
+    //@add parentSeedLevel (according json seed_level) 时效性环打的该属性, 可能以后会指导大环调度
+	optional	int32	parentSeedLevel =66; 
+    //forbid 数据是否过期
+    optional    int32   forbid = 67;
+    //isInIndex, 是否在大搜索引擎中(linkbase中有几千亿数据, 索引中仅有几百亿)
+	optional	bool	isInIndex = 68;
+	//@del optional	int32	level = 20;
+	//@del optional	int32	normalizedUV= 11;
+	//@del optional	string	isOld = 24;
+    //@del optional	int32	averageUVInValidDays = 35;
+	//@del optional	int32	parentUV = 40;
+    //@del optional	int64	sumUV = 47;
+	//@del optional	bool	safeUrl = 50;
+    //@del optional	string	logJsonType = 57;
+	//@del optional	int32	up = 70;
+    //@del optional	int32	validUVDaysCount = 54;
+    //@del optional string parent;
+}
